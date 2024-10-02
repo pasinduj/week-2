@@ -1,0 +1,61 @@
+1.Add a new column to the Customer Sale View called "Full Name". This should be made up of the Customer Firstname and Last Name columns
+
+
+
+create view CustomerSales
+as
+select c.Id as 'Customer Id',c.FirstName,c.LastName,s.DateSold,p.[Name],p.Price
+from Customer c
+    left join
+       Sale s on 
+         c.Id = s.CustomerId
+            left join
+              Product p on 
+                 s.ProductId = p.Id
+
+
+2.Write a function that calculates the persons age using their date of birth
+
+
+
+CREATE FUNCTION CalculateAge (@DateOfBirth datetime)
+RETURNS int
+AS
+BEGIN
+    DECLARE @Age int;
+
+    SELECT @Age = DATEDIFF(year, @DateOfBirth, GETDATE()) - 
+                  CASE 
+                      WHEN (MONTH(@DateOfBirth) > MONTH(GETDATE())) OR 
+                           (MONTH(@DateOfBirth) = MONTH(GETDATE()) AND DAY(@DateOfBirth) > DAY(GETDATE()))
+                      THEN 1 
+                      ELSE 0 
+                  END;
+
+    RETURN @Age;
+END;
+
+
+3.Create a new table called Store that will give the details of where the sale was made. This should contain "Name" and "Location"
+
+
+CREATE TABLE Store (
+    Id int IDENTITY(1,1) NOT NULL,
+    Name nvarchar(100) NULL,
+    Location nvarchar(100) NULL,
+    CONSTRAINT PK_Store PRIMARY KEY CLUSTERED (Id)
+);
+
+
+4. Add the Store to the sale table
+
+
+CREATE TABLE Sale (
+    Id int IDENTITY(1,1) NOT NULL,
+    CustomerId int,
+    ProductId int,
+    StoreId int,
+    DateSold  datetime ,
+CONSTRAINT PK_Sale PRIMARY KEY CLUSTERED (Id)
+ 
+);
