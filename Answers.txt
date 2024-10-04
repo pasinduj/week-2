@@ -2,16 +2,19 @@
 
 
 
-create view CustomerSales
-as
-select c.Id as 'Customer Id',c.FirstName,c.LastName,s.DateSold,p.[Name],p.Price
-from Customer c
-    left join
-       Sale s on 
-         c.Id = s.CustomerId
-            left join
-              Product p on 
-                 s.ProductId = p.Id
+CREATE VIEW CustomerSales
+AS
+SELECT 
+    c.Id AS 'Customer Id',
+    c.FirstName,
+    c.LastName,
+    (c.FirstName + ' ' + c.LastName) AS 'Full Name',
+    s.DateSold,
+    p.[Name],
+    p.Price
+FROM Customer c
+    LEFT JOIN Sale s ON c.Id = s.CustomerId
+    LEFT JOIN Product p ON s.ProductId = p.Id;
 
 
 2.Write a function that calculates the persons age using their date of birth
